@@ -67,16 +67,15 @@
 
         .cancel-btn {
             background: #f44336;
-        }
+        
 
-        @media screen and (max-width: 600px) {
-    .card {
-        width: 100% !important; /* card fills the screen width */
-    }
-    button {
-        flex: 1 1 100%;          /* buttons stack vertically and fill width */
-    }
+      /* MOBILE RESPONSIVE */
+@media screen and (max-width: 600px) {
+    .card { width: 100% !important; }
+    .buttons { flex-direction: column; }
+    button { flex: 1 1 100%; font-size: 18px; }
 }
+
 
     </style>
 </head>
@@ -209,4 +208,5 @@
 
 </body>
 </html>
+
 
