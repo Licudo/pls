@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -10,7 +10,7 @@
             font-family: Arial, sans-serif;
             background: #e8f4ff;
             margin: 0;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -24,18 +24,19 @@
             text-align: center;
             animation: fadeIn 0.4s ease-in-out;
             margin: auto;
+            width: 90%;       /* responsive width */
+            max-width: 600px; /* maximum width for desktop */
         }
 
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: scale(0.97);
-            }
+            from { opacity: 0; transform: scale(0.97); }
+            to { opacity: 1; transform: scale(1); }
+        }
 
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
+        .card img {
+            width: 100%;
+            height: auto;      /* keeps image proportional */
+            object-fit: cover;
         }
 
         .text {
@@ -49,10 +50,11 @@
             display: flex;
             justify-content: space-between;
             padding: 20px;
+            gap: 10px;
         }
 
         button {
-            width: 48%;
+            flex: 1;
             padding: 12px;
             font-size: 16px;
             border: none;
@@ -61,22 +63,14 @@
             color: #fff;
         }
 
-        .next-btn {
-            background: #4caf50;
+        .next-btn { background: #4caf50; }
+        .cancel-btn { background: #f44336; }
+
+        /* MOBILE RESPONSIVE */
+        @media screen and (max-width: 600px) {
+            .buttons { flex-direction: column; }
+            button { font-size: 18px; }
         }
-
-        .cancel-btn {
-            background: #f44336;
-        
-
-      /* MOBILE RESPONSIVE */
-@media screen and (max-width: 600px) {
-    .card { width: 100% !important; }
-    .buttons { flex-direction: column; }
-    button { flex: 1 1 100%; font-size: 18px; }
-}
-
-
     </style>
 </head>
 <body>
@@ -84,8 +78,6 @@
     <div id="cardContainer"></div>
 
     <script>
-
-        // ===== PHOTO CARDS CONFIG =====
         const cards = [
             {
                 img: "Keyboard1.png",
@@ -93,9 +85,7 @@
                 next: 1,
                 cancel: 2,
                 nextText: "Oo naman bibilhan kita",
-                cancelText: "ayoko",
-                cardWidth: "900px",
-                imgHeight: "auto"
+                cancelText: "ayoko"
             },
             {
                 img: "https://s3.eu-west-1.amazonaws.com/meme-dev/991bf495-9a95-4001-b273-debc44ba3530.jpg",
@@ -103,9 +93,7 @@
                 next: null,
                 cancel: null,
                 nextText: "",
-                cancelText: "",
-                cardWidth: "650px",
-                imgHeight: "450px"
+                cancelText: ""
             },
             {
                 img: "https://a.pinatafarm.com/330x336/d94184b681/crying-guy.jpg",
@@ -113,9 +101,7 @@
                 next: 1,
                 cancel: 3,
                 nextText: "sige bibilhan na kita",
-                cancelText: "ayoko nga",
-                cardWidth: "450px",
-                imgHeight: "450px"
+                cancelText: "ayoko nga"
             },
             {
                 img: "https://media.tenor.com/imr7h6Ph9HcAAAAe/man-crying.png",
@@ -123,9 +109,7 @@
                 next: 1,
                 cancel: 4,
                 nextText: "gusto mo talaga sige na nga",
-                cancelText: "ayoko ngani",
-                cardWidth: "450px",
-                imgHeight: "450px"
+                cancelText: "ayoko ngani"
             },
             {
                 img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRun2DimP1cXYbfgWv5MNygjbJuWofcEJPWOsXbS2BtcnLd0_r2cd_4_lvwWYG9jX1MEQA&usqp=CAU",
@@ -133,9 +117,7 @@
                 next: 1,
                 cancel: 5,
                 nextText: "gustong gusto mo talaga sige bilhan na kita",
-                cancelText: "ayoko nga boii",
-                cardWidth: "450px",
-                imgHeight: "450px"
+                cancelText: "ayoko nga boii"
             },
             {
                 img: "https://s3.eu-west-1.amazonaws.com/meme-dev/9b8ecece-27e6-4c68-9faa-e479adbcae1a.jpeg",
@@ -143,9 +125,7 @@
                 next: 1,
                 cancel: 6,
                 nextText: "sige na nga pasko naman",
-                cancelText: "wala pera boi",
-                cardWidth: "450px",
-                imgHeight: "450px"
+                cancelText: "wala pera boi"
             },
             {
                 img: "https://i.pinimg.com/736x/3e/ea/69/3eea69fda60bdf4b7ecc4e3e6f97a9d9.jpg",
@@ -153,9 +133,7 @@
                 next: 1,
                 cancel: 7,
                 nextText: "sige na nga bibilhan na kita mabait ka namang kapatid",
-                cancelText: "wala ngani peraaaa",
-                cardWidth: "450px",
-                imgHeight: "450px"
+                cancelText: "wala ngani peraaaa"
             },
             {
                 img: "https://i.pinimg.com/236x/5b/0e/69/5b0e69fdb1cbad6fa3962935312e9869.jpg",
@@ -163,9 +141,7 @@
                 next: 1,
                 cancel: null,
                 nextText: "Sige na nga bilhan na kita pamasko ko sayo ",
-                cancelText: "",
-                cardWidth: "450px",
-                imgHeight: "450px"
+                cancelText: ""
             }
         ];
 
@@ -176,20 +152,18 @@
             const c = cards[index];
 
             let cardHTML = `
-                <div class="card" style="width:${c.cardWidth};">
-                    <img src="${c.img}" style="width:100%; height:${c.imgHeight}; object-fit:cover;">
+                <div class="card">
+                    <img src="${c.img}" alt="Photo">
                     <div class="text">${c.text}</div>
                     <div class="buttons">
             `;
 
-            // NEXT BUTTON
             if (c.next !== null) {
                 cardHTML += `<button class="next-btn" onclick="loadCard(${c.next})">${c.nextText}</button>`;
             } else {
                 cardHTML += `<button class="next-btn" style="opacity:0; pointer-events:none;"></button>`;
             }
 
-            // CANCEL BUTTON
             if (c.cancel !== null) {
                 cardHTML += `<button class="cancel-btn" onclick="loadCard(${c.cancel})">${c.cancelText}</button>`;
             } else {
@@ -197,16 +171,11 @@
             }
 
             cardHTML += `</div></div>`;
-
             document.getElementById("cardContainer").innerHTML = cardHTML;
         }
 
-        // LOAD FIRST CARD
         loadCard(0);
-
     </script>
 
 </body>
 </html>
-
-
