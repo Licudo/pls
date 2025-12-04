@@ -1,0 +1,201 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Card Navigation</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #e8f4ff;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            overflow: hidden;
+            text-align: center;
+            animation: fadeIn 0.4s ease-in-out;
+            margin: auto;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.97);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .text {
+            padding: 20px;
+            border-top: 1px solid #ddd;
+            font-size: 18px;
+            color: #444;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        button {
+            width: 48%;
+            padding: 12px;
+            font-size: 16px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            color: #fff;
+        }
+
+        .next-btn {
+            background: #4caf50;
+        }
+
+        .cancel-btn {
+            background: #f44336;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="cardContainer"></div>
+
+    <script>
+
+        // ===== PHOTO CARDS CONFIG =====
+        const cards = [
+            {
+                img: "Keyboard1.png",
+                text: "Bibilhan mo bako neto ngayong paskoo hehehehe 😁😁🤗🤗",
+                next: 1,
+                cancel: 2,
+                nextText: "Oo naman bibilhan kita",
+                cancelText: "ayoko",
+                cardWidth: "900px",
+                imgHeight: "auto"
+            },
+            {
+                img: "https://s3.eu-west-1.amazonaws.com/meme-dev/991bf495-9a95-4001-b273-debc44ba3530.jpg",
+                text: "Napakabait at napaka ganda mo talaga aking kapatid heheheheh maraming salamuchhhh 🤗🤗🤗🤗",
+                next: null,
+                cancel: null,
+                nextText: "",
+                cancelText: "",
+                cardWidth: "650px",
+                imgHeight: "450px"
+            },
+            {
+                img: "https://a.pinatafarm.com/330x336/d94184b681/crying-guy.jpg",
+                text: "ate sige na bilan mo nako pls😔",
+                next: 1,
+                cancel: 3,
+                nextText: "sige bibilhan na kita",
+                cancelText: "ayoko nga",
+                cardWidth: "450px",
+                imgHeight: "450px"
+            },
+            {
+                img: "https://media.tenor.com/imr7h6Ph9HcAAAAe/man-crying.png",
+                text: "ateeeeee 😭😭😭😭😭😭",
+                next: 1,
+                cancel: 4,
+                nextText: "gusto mo talaga sige na nga",
+                cancelText: "ayoko ngani",
+                cardWidth: "450px",
+                imgHeight: "450px"
+            },
+            {
+                img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRun2DimP1cXYbfgWv5MNygjbJuWofcEJPWOsXbS2BtcnLd0_r2cd_4_lvwWYG9jX1MEQA&usqp=CAU",
+                text: "Ateeee raibieeee plssssss😭😭😭😭",
+                next: 1,
+                cancel: 5,
+                nextText: "gustong gusto mo talaga sige bilhan na kita",
+                cancelText: "ayoko nga boii",
+                cardWidth: "450px",
+                imgHeight: "450px"
+            },
+            {
+                img: "https://s3.eu-west-1.amazonaws.com/meme-dev/9b8ecece-27e6-4c68-9faa-e479adbcae1a.jpeg",
+                text: "ATEEEEEEEEE😭😭😭😭😭😭",
+                next: 1,
+                cancel: 6,
+                nextText: "sige na nga pasko naman",
+                cancelText: "wala pera boi",
+                cardWidth: "450px",
+                imgHeight: "450px"
+            },
+            {
+                img: "https://i.pinimg.com/736x/3e/ea/69/3eea69fda60bdf4b7ecc4e3e6f97a9d9.jpg",
+                text: "ATE RAIBIEEE PLSSS MAAWA KANAA😭😭😭😭",
+                next: 1,
+                cancel: 7,
+                nextText: "sige na nga bibilhan na kita mabait ka namang kapatid",
+                cancelText: "wala ngani peraaaa",
+                cardWidth: "450px",
+                imgHeight: "450px"
+            },
+            {
+                img: "https://i.pinimg.com/236x/5b/0e/69/5b0e69fdb1cbad6fa3962935312e9869.jpg",
+                text: "ATEEEE SIGE NA PLS BILAN MO NAKO😭😭😭😭😭😭😭😭😭😭",
+                next: 1,
+                cancel: null,
+                nextText: "Sige na nga bilhan na kita pamasko ko sayo ",
+                cancelText: "",
+                cardWidth: "450px",
+                imgHeight: "450px"
+            }
+        ];
+
+        let current = 0;
+
+        function loadCard(index) {
+            current = index;
+            const c = cards[index];
+
+            let cardHTML = `
+                <div class="card" style="width:${c.cardWidth};">
+                    <img src="${c.img}" style="width:100%; height:${c.imgHeight}; object-fit:cover;">
+                    <div class="text">${c.text}</div>
+                    <div class="buttons">
+            `;
+
+            // NEXT BUTTON
+            if (c.next !== null) {
+                cardHTML += `<button class="next-btn" onclick="loadCard(${c.next})">${c.nextText}</button>`;
+            } else {
+                cardHTML += `<button class="next-btn" style="opacity:0; pointer-events:none;"></button>`;
+            }
+
+            // CANCEL BUTTON
+            if (c.cancel !== null) {
+                cardHTML += `<button class="cancel-btn" onclick="loadCard(${c.cancel})">${c.cancelText}</button>`;
+            } else {
+                cardHTML += `<button class="cancel-btn" style="opacity:0; pointer-events:none;"></button>`;
+            }
+
+            cardHTML += `</div></div>`;
+
+            document.getElementById("cardContainer").innerHTML = cardHTML;
+        }
+
+        // LOAD FIRST CARD
+        loadCard(0);
+
+    </script>
+
+</body>
+</html>
